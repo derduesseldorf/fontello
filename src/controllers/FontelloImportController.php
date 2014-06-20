@@ -7,7 +7,7 @@ use Illuminate\Session\TokenMismatchException;
  * Examples
  * @package Derduesseldorf\Fontello\Controllers
  * @author Mirko Düßeldorf <rheingestalter@gmail.com>
- * @version 1.0.0.0
+ * @version 1.1.0.0
  */
 class FontelloImportController extends \BaseController {
 
@@ -24,6 +24,7 @@ class FontelloImportController extends \BaseController {
         if(\Fontello::configFileExists()) {
             $this->_data['hasSession'] = false;
             $this->_data['configFile'] = \Fontello::getConfigFileName();
+            $this->_data['lastUsedSession'] = \Fontello::getLastUsedSessionId();
 
             if(\Fontello::getFontelloSession()) {
                 $this->_data['hasSession'] = true;

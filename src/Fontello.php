@@ -6,7 +6,7 @@ use Symfony\Component\Process\Exception\LogicException;
  * Class Fontello
  * @package Derduesseldorf\Fontello
  * @author Mirko Düßeldorf <rheingestalter@gmail.com>
- * @version 1.0.0.0
+ * @version 1.1.0.0
  */
 class Fontello
 {
@@ -73,6 +73,7 @@ class Fontello
         $_curlRequest = null;
         if ($_response) {
             \Session::set(\Config::get('fontello::config.session'), $_response);
+            \File::put(public_path('fontello/').'last_used_session.txt', $_response);
             return $_response;
         }
     }
@@ -132,7 +133,6 @@ class Fontello
         }
         if(\File::isDirectory(public_path('fontello'))) {
             \File::deleteDirectory(public_path('fontello'));
-
         }
         \File::makeDirectory(public_path('assets/fontello', 0777, true));
         \File::makeDirectory(public_path('fontello', 0777, true));
@@ -185,6 +185,25 @@ class Fontello
      */
     public function getConfigFileName() {
         return \Config::get('fontello::config.file');
+    }
+
+    public function getLastUsedSessionId() {
+        if(\File::exists(public_path('fontello/').'last_used_session.txt')) {
+            return \File::get(public_path('fontello/').'last_used_session.txt');
+        }
+        return 'No SessionId has been retrieved yet';
+    }
+
+    public function styles() {
+        $styles = array();
+        if(\File::isDirectory(public_path('assets/fontello/css'))) {
+            foreach(glob(public_path('assets/fontello/css/').'*', GLOB_BRACE) as $path) {
+                $file = explode('/', $path);
+                $styles[] = \HTML::style('public/assets/fontello/css/'.end($file));
+            }
+
+            return join("\n", $styles);
+        }
     }
 
 }
