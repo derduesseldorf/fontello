@@ -73,7 +73,7 @@ class Fontello
         $_curlRequest = null;
         if ($_response) {
             \Session::set(\Config::get('fontello::config.session'), $_response);
-            \File::put(public_path('fontello/').'last_used_session.txt', $_response);
+            \File::put(public_path('fontello/') . 'last_used_session.txt', $_response);
             return $_response;
         }
     }
@@ -99,10 +99,10 @@ class Fontello
      * @return Fontello
      */
     public function zipFontelloArchive($data = null) {
-        if(\File::isDirectory(\File::deleteDirectory($this->_fontelloStorage))) {
+        if (\File::isDirectory(\File::deleteDirectory($this->_fontelloStorage))) {
             \File::deleteDirectory($this->_fontelloStorage);
         }
-        \File::makeDirectory($this->_fontelloStorage , 0777, true, true);
+        \File::makeDirectory($this->_fontelloStorage, 0777, true, true);
         if (\File::exists($this->_fontelloZipArchive)) {
             \File::delete($this->_fontelloZipArchive);
         }
@@ -128,14 +128,12 @@ class Fontello
      * cleanup structure and move files
      */
     public function moveFontelloFiles() {
-        if(\File::isDirectory(public_path('assets/fontello'))) {
-            \File::deleteDirectory(public_path('assets/fontello'));
-        }
-        if(\File::isDirectory(public_path('fontello'))) {
-            \File::deleteDirectory(public_path('fontello'));
-        }
-        \File::makeDirectory(public_path('assets/fontello', 0777, true));
-        \File::makeDirectory(public_path('fontello', 0777, true));
+
+        $this->_clearDirectory(array(
+            'assets/fontello',
+            'fontello'
+        ));
+
         foreach (glob($this->_fontelloStorage . 'fontello-*/*', GLOB_NOSORT) as $file) {
             if (str_contains($file, 'config.json')) {
                 if (\File::exists(public_path('fontello/') . 'config.json')) {
@@ -165,14 +163,6 @@ class Fontello
     }
 
     /**
-     * Retrieve configfile content
-     * @return string
-     */
-    private function _getConfigFileContent() {
-        return '@' . $this->getConfigFile();
-    }
-
-    /**
      * Retrieve config file
      * @return mixed
      */
@@ -188,22 +178,55 @@ class Fontello
     }
 
     public function getLastUsedSessionId() {
-        if(\File::exists(public_path('fontello/').'last_used_session.txt')) {
-            return \File::get(public_path('fontello/').'last_used_session.txt');
+        if (\File::exists(public_path('fontello/') . 'last_used_session.txt')) {
+            return \File::get(public_path('fontello/') . 'last_used_session.txt');
         }
         return 'No SessionId has been retrieved yet';
     }
 
+    /**
+     * Retrieve all fontello css files as link elements
+     * @return string
+     */
     public function styles() {
         $styles = array();
-        if(\File::isDirectory(public_path('assets/fontello/css'))) {
-            foreach(glob(public_path('assets/fontello/css/').'*', GLOB_BRACE) as $path) {
+        if (\File::isDirectory(public_path('assets/fontello/css'))) {
+            foreach (glob(public_path('assets/fontello/css/') . '*', GLOB_BRACE) as $path) {
                 $file = explode('/', $path);
-                $styles[] = \HTML::style('public/assets/fontello/css/'.end($file));
+                $styles[] = \HTML::style('public/assets/fontello/css/' . end($file));
             }
 
             return join("\n", $styles);
         }
+    }
+
+    /**
+     * Clear Directory
+     * @param string|array $directory
+     */
+    private function _clearDirectory($directory) {
+        if (is_array($directory)) {
+            $_directories = $directory;
+            foreach ($_directories as $directory) {
+                if (\File::isDirectory(public_path($directory))) {
+                    \File::deleteDirectory(public_path($directory));
+                }
+                \File::makeDirectory(public_path($directory), 0777, true);
+            }
+        } elseif (is_string($directory)) {
+            if (\File::isDirectory(public_path($directory))) {
+                \File::deleteDirectory(public_path($directory));
+            }
+            \File::makeDirectory(public_path($directory), 0777, true);
+        }
+    }
+
+    /**
+     * Retrieve configfile content
+     * @return string
+     */
+    private function _getConfigFileContent() {
+        return '@' . $this->getConfigFile();
     }
 
 }
