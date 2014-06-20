@@ -5,11 +5,12 @@ use Illuminate\Session\TokenMismatchException;
 /**
  * Class FontelloImportController
  * Examples
- * @package Derduesseldorf\Fontello\Controllers
+ * @package Derduesseldorf\Fontello
  * @author Mirko Düßeldorf <rheingestalter@gmail.com>
  * @version 1.1.0.0
  */
-class FontelloImportController extends \BaseController {
+class FontelloImportController extends \BaseController
+{
 
     /** @var array $_data */
     protected $_data = array();
@@ -21,12 +22,12 @@ class FontelloImportController extends \BaseController {
      */
     public function getIndex($fontellosession = null) {
 
-        if(\Fontello::configFileExists()) {
+        if (\Fontello::configFileExists()) {
             $this->_data['hasSession'] = false;
             $this->_data['configFile'] = \Fontello::getConfigFileName();
             $this->_data['lastUsedSession'] = \Fontello::getLastUsedSessionId();
 
-            if(\Fontello::getFontelloSession()) {
+            if (\Fontello::getFontelloSession()) {
                 $this->_data['hasSession'] = true;
                 $this->_data['fontelloSessionId'] = \Fontello::getFontelloSession();
             }
@@ -41,14 +42,12 @@ class FontelloImportController extends \BaseController {
      * @throws \Illuminate\Session\TokenMismatchException
      */
     public function getRunImport() {
-        if(\Session::token() == \Input::get('_token') && \Fontello::configFileExists()) {
+        if (\Session::token() == \Input::get('_token') && \Fontello::configFileExists()) {
             $_response = \Fontello::getFontelloSessionId();
-            if($_response && is_string($_response)) {
+            if ($_response && is_string($_response)) {
                 return \Redirect::route('fontello.start.import');
             }
-        }
-
-        else {
+        } else {
             throw new TokenMismatchException('Token has been changed');
         }
     }
@@ -60,18 +59,12 @@ class FontelloImportController extends \BaseController {
      * @return \Illuminate\Http\RedirectResponse
      */
     public function getCallback() {
-        if($_fontelloData = \Fontello::getFontelloZipFile()) {
-            try {
-                \Fontello::zipFontelloArchive($_fontelloData);
-                \Fontello::unzipArchive();
-                \Fontello::moveFontelloFiles();
-                return \Redirect::route('fontello.start.import');
-            }
-
-            catch(\Exception $e) {
-                return \Redirect::route('fontello.start.import')->withErrors(array('Failed to setup fontello files'));
-            }
+        try {
+            \Fontello::setupFontelloFiles();
+        } catch (\Exception $e) {
+            return \Redirect::route('fontello.start.import')->withErrors(array('Failed to setup fontello files'));
         }
+
     }
 
 

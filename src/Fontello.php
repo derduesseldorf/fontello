@@ -6,7 +6,7 @@ use Symfony\Component\Process\Exception\LogicException;
  * Class Fontello
  * @package Derduesseldorf\Fontello
  * @author Mirko Düßeldorf <rheingestalter@gmail.com>
- * @version 1.1.0.0
+ * @version 1.2.1.0
  */
 class Fontello
 {
@@ -91,6 +91,15 @@ class Fontello
         curl_close($_curlRequest);
         $_curlRequest = null;
         return $_response;
+    }
+
+    /**
+     * Setup Fontello files
+     */
+    public function setupFontelloFiles() {
+        self::zipFontelloArchive(self::getFontelloZipFile());
+        self::unzipArchive();
+        self::moveFontelloFiles();
     }
 
     /**

@@ -5,7 +5,7 @@ A simple module for Laravel in early status.
 This package gives you the ability to use fontello api directly in your laravel application. 
 
 ###Basic Setup
-Require this package in you composer.json 
+Require this package in your composer.json 
 
 `"derduesseldorf/fontello" : "1.1.1.0"`
 
@@ -21,13 +21,22 @@ Add the Facade to the aliases in app/config/app.php
 
 + **config.json**  
 the config.json will be placed in "public/assets/fontello"
+
 + **Css files**  
 All css files will be placed in "public/assets/fontello/css"
+
 + **Font files**  
 All font files will be placed in "public/assets/fontello/font"
+
 + **Temp folder**  
 The temporary data will be placed in "public/uploads/"
 
-**Make sure to setup "public/assets" and "public/uploads"**
+**Make sure to setup "*public/assets*" and "*public/uploads*"**
+
+##Examples 
+Open "derduesseldorf/fontello/controllers" to see how fontello works. You are free to choose where you want to place your app logic. 
+
+
+
 
 
