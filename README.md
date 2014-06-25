@@ -34,7 +34,7 @@ The temporary data will be placed in "public/uploads/"
 **Make sure to setup "*public/assets*" and "*public/uploads*"**
 
 ##Examples 
-Open "derduesseldorf/fontello/controllers" to see how fontello works. You are free to choose where you want to place your app logic. 
+Open "derduesseldorf/fontello/controllers/FontelloImportController" to see how fontello for Laravel works. You are free to choose where you want to place your app logic. 
 
 
 

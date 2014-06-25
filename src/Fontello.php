@@ -73,7 +73,7 @@ class Fontello
         $_curlRequest = null;
         if ($_response) {
             \Session::set(\Config::get('fontello::config.session'), $_response);
-            \File::put(public_path('fontello/') . 'last_used_session.txt', $_response);
+            $this->setLastUsedSessionId($_response);
             return $_response;
         }
     }
@@ -90,7 +90,9 @@ class Fontello
         $_response = curl_exec($_curlRequest);
         curl_close($_curlRequest);
         $_curlRequest = null;
-        return $_response;
+        if ($_response) {
+            return $_response;
+        }
     }
 
     /**
@@ -100,6 +102,7 @@ class Fontello
         self::zipFontelloArchive(self::getFontelloZipFile());
         self::unzipArchive();
         self::moveFontelloFiles();
+        return $this;
     }
 
     /**
@@ -194,6 +197,16 @@ class Fontello
     }
 
     /**
+     * Set last used session id
+     * @param null $_response
+     */
+    public function setLastUsedSessionId($_response = null) {
+        if (\Config::get('fontello::config.lsid')) {
+            \File::put(public_path('fontello/') . 'last_used_session.txt', $_response);
+        }
+    }
+
+    /**
      * Retrieve all fontello css files as link elements
      * @return string
      */
@@ -235,7 +248,8 @@ class Fontello
      * @return string
      */
     private function _getConfigFileContent() {
-        return '@' . $this->getConfigFile();
+        $filename = explode('/', $this->getConfigFile());
+        return new \CURLFile($this->getConfigFile(), 'text/json', end($filename));
     }
 
 }

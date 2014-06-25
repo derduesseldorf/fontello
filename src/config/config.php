@@ -11,4 +11,7 @@ return array(
     'session'       => 'fontellosession',
     'archive'       => 'fontello.zip',
 
+    /** Booleans */
+    'lsid'          => true
+
 );
