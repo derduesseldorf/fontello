@@ -6,7 +6,7 @@ use Symfony\Component\Process\Exception\LogicException;
  * Class Fontello
  * @package Derduesseldorf\Fontello
  * @author Mirko Düßeldorf <rheingestalter@gmail.com>
- * @version 1.2.1.0
+ * @version 1.2.1.1
  */
 class Fontello
 {
